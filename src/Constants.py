@@ -1,0 +1,7 @@
+BLACK_COLOR = 0, 0, 0
+BLUE_COLOR = 38, 51, 73
+IVORY_COLOR = 242, 239, 228
+WHITE_COLOR = 255, 255, 255
+RED_COLOR = 105, 0, 20
+
+FONT_PATH = './res/font/neodgm_code.ttf'

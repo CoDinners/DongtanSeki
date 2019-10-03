@@ -1,4 +1,5 @@
 from pygame import display
+from pygame.time import Clock
 
 
 class Display:
@@ -9,3 +10,5 @@ class Display:
         self.fps: float = fps
 
         self.window = display.set_mode((self.width, self.height))
+
+        self.clock = Clock()
