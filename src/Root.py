@@ -1,6 +1,5 @@
 import pygame
 
-from src import Constants
 from src.Display import Display
 from src.manager.MouseManager import MouseManager
 from src.manager.RootObjectManager import RootObjectManager
@@ -29,9 +28,9 @@ def init():
 
     mouse_manager = MouseManager()
     object_manager = RootObjectManager()
-    state_manager = StateManager()
+    state_manager = StateManager(shutdown, display, mouse_manager)
 
-    state_manager.set_state(Lobby(shutdown, display, mouse_manager, state_manager))
+    state_manager.set_state('lobby')
 
 def handle():
     mouse_manager.handle()
