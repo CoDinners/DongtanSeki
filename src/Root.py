@@ -29,7 +29,9 @@ def init():
 
     mouse_manager = MouseManager()
     object_manager = RootObjectManager()
-    state_manager = StateManager(Lobby(display))
+    state_manager = StateManager()
+
+    state_manager.set_state(Lobby(shutdown, display, mouse_manager, state_manager))
 
 def handle():
     mouse_manager.handle()

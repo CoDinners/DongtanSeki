@@ -3,15 +3,24 @@ from pygame.surface import Surface
 from src.Constants import BLUE_COLOR, IVORY_COLOR, FONT_PATH
 from src.Display import Display
 from src.Font import Font
+from src.manager.MouseManager import MouseManager
+from src.manager.StateManager import StateManager
+from src.root_object.ClickArea import ClickArea
 from src.root_object.ObjectMover import ObjectMover
 from src.root_object.Text import Text
+from src.root_object.Transition import Transition
+from src.state.Collocate import Collocate
+from src.state.Place import Place
 from src.state.State import State
 
 
 class Lobby(State):
     background_color = BLUE_COLOR
 
-    def __init__(self, display: Display):
+    def __init__(self, shutdown, display: Display, mouse_manager: MouseManager, state_manager: StateManager):
+        self.state_manager = state_manager
+        self.shutdown = shutdown
+
         self.text_color = IVORY_COLOR
 
         copyright_font = Font(FONT_PATH, 24, self.text_color)
@@ -27,12 +36,30 @@ class Lobby(State):
         self.quit_button = Text(0, 0, '종료', button_font)
         self.quit_button.x = display.width - self.quit_button.surface.get_width() - 150
         self.quit_button.y = display.height - 150 - self.quit_button.font.size * 3 - 120
+        self.quit_button_clickarea = ClickArea(
+            mouse_manager, self.quit_button.surface.get_width(), self.quit_button.surface.get_height(),
+            sticker=self.quit_button
+        )
+
         self.place_button = Text(0, 0, '자리 선정', button_font)
         self.place_button.x = display.width - self.place_button.surface.get_width() - 150
         self.place_button.y = display.height - 150 - self.place_button.font.size * 2 - 60
+        self.place_button_clickarea = ClickArea(
+            mouse_manager, self.place_button.surface.get_width(), self.place_button.surface.get_height(),
+            sticker=self.place_button
+        )
+        self.place_button_transition = Transition(Place.background_color, display,
+                                                  after=self._place_button_clickarea_transition_after)
+
         self.collocate_button = Text(0, 0, '자리 배치', button_font)
         self.collocate_button.x = display.width - self.collocate_button.surface.get_width() - 150
         self.collocate_button.y = display.height - 150 - self.collocate_button.font.size
+        self.collocate_button_clickarea = ClickArea(
+            mouse_manager, self.collocate_button.surface.get_width(), self.collocate_button.surface.get_height(),
+            sticker=self.collocate_button
+        )
+        self.collocate_button_transition = Transition(Collocate.background_color, display,
+                                                      after=self._collocate_button_clickarea_transition_after)
 
         self.object_movers = (
             ObjectMover(self.title, initial_offset_x=-(150 + self.title.surface.get_width()) * 2),
@@ -47,6 +74,26 @@ class Lobby(State):
         for object_mover in self.object_movers:
             object_mover.tick()
 
+        self.quit_button_clickarea.tick()
+        self.place_button_clickarea.tick()
+        self.collocate_button_clickarea.tick()
+
+        if self.quit_button_clickarea.clicked:
+            self.shutdown()
+        elif self.place_button_clickarea.clicked:
+            self.place_button_transition.start()
+        elif self.collocate_button_clickarea.clicked:
+            self.collocate_button_transition.start()
+
+        self.place_button_transition.tick()
+        self.collocate_button_transition.tick()
+
+    def _place_button_clickarea_transition_after(self):
+        self.state_manager.set_state(Place())
+
+    def _collocate_button_clickarea_transition_after(self):
+        self.state_manager.set_state(Collocate())
+
     def render(self, surface: Surface):
         self.copyright1.render(surface)
         self.copyright2.render(surface)
@@ -56,3 +103,6 @@ class Lobby(State):
         self.quit_button.render(surface)
         self.place_button.render(surface)
         self.collocate_button.render(surface)
+
+        self.place_button_transition.render(surface)
+        self.collocate_button_transition.render(surface)
