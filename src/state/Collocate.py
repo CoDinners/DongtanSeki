@@ -21,6 +21,7 @@ class Collocate(State):
     SEATS = './res/seats.pickle'
 
     def __init__(self, display: Display, mouse_manager: MouseManager, state_manager):
+        self.mouse_manager = mouse_manager
         self.state_manager = state_manager
 
         self.square_size = (display.height - 300) * 6 / 41
@@ -61,7 +62,8 @@ class Collocate(State):
         self.button_transition = Transition(BLUE_COLOR, display, after=self._button_transition_after)
 
         self.barrier_rect = Rectangle(
-            -(150 + (self.square_size + self.square_gap) * 10), 0, 150 + (self.square_size + self.square_gap) * 10, display.height, Collocate.background_color, display)
+            -(150 + (self.square_size + self.square_gap) * 10), 0,
+            150 + (self.square_size + self.square_gap) * 10, display.height, Collocate.background_color, display)
 
         self.object_movers = [
             ObjectMover(self.ok_button, initial_offset_x=(150 + self.ok_button.surface.get_width()) * 2),
@@ -92,6 +94,9 @@ class Collocate(State):
             self.button_transition.start()
 
         self.button_transition.tick()
+
+        if self.mouse_manager.left and self.mouse_manager.right:
+            self.state_manager.set_state('secret')
 
     def _button_transition_after(self):
         self.state_manager.set_state('lobby')

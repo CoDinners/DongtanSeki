@@ -20,7 +20,7 @@ class StateManager:
         elif state_name == 'collocate':
             self.state = Collocate(self.display, self.mouse_manager, self)
         elif state_name == 'place':
-            self.state = Place(self.mouse_manager, self)
+            self.state = Place(self.display, self.mouse_manager, self)
         elif state_name == 'secret':
             self.state = Secret(self.display, self.mouse_manager, self)
 
