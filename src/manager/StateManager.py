@@ -3,6 +3,7 @@ from pygame.surface import Surface
 from src.state.Collocate import Collocate
 from src.state.Lobby import Lobby
 from src.state.Place import Place
+from src.state.Secret import Secret
 from src.state.State import State
 
 
@@ -19,7 +20,9 @@ class StateManager:
         elif state_name == 'collocate':
             self.state = Collocate(self.display, self.mouse_manager, self)
         elif state_name == 'place':
-            self.state = Place()
+            self.state = Place(self.mouse_manager, self)
+        elif state_name == 'secret':
+            self.state = Secret(self.display, self.mouse_manager, self)
 
     def tick(self):
         self.state.tick()

@@ -1,6 +1,6 @@
 from pygame.surface import Surface
 
-from src.Constants import BLUE_COLOR, IVORY_COLOR, FONT_PATH, RED_COLOR
+from src.Constants import BLUE_COLOR, IVORY_COLOR, FONT_PATH, RED_COLOR, PROJECT_NAME
 from src.Display import Display
 from src.Font import Font
 from src.manager.MouseManager import MouseManager
@@ -29,7 +29,7 @@ class Lobby(State):
                                'All rights belong to its respective owners.', copyright_font)
 
         title_font = Font(FONT_PATH, 128, self.text_color)
-        self.title = Text(150, self.copyright1.y - title_font.size - 30, '자리배치', title_font)
+        self.title = Text(150, self.copyright1.y - title_font.size - 30, PROJECT_NAME, title_font)
 
         button_font = Font(FONT_PATH, 64, self.text_color)
         self.quit_button = Text(0, 0, '종료', button_font)

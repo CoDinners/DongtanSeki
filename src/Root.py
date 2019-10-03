@@ -1,10 +1,10 @@
 import pygame
 
+from src.Constants import PROJECT_NAME
 from src.Display import Display
 from src.manager.MouseManager import MouseManager
 from src.manager.RootObjectManager import RootObjectManager
 from src.manager.StateManager import StateManager
-from src.state.Lobby import Lobby
 
 running = False
 display: Display = None
@@ -24,7 +24,7 @@ def init():
     pygame.init()
 
     running = True
-    display = Display(1920, 1080, 'DongtanSeat', 60)
+    display = Display(1920, 1080, PROJECT_NAME, 60, './res/icon.png')
 
     mouse_manager = MouseManager()
     object_manager = RootObjectManager()
